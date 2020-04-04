@@ -40,6 +40,7 @@
         buildList();
         function buildList(){
             var wrapper = document.getElementById('list-wrapper');
+            wrapper.innerHTML = '';
             var url = 'http://127.0.0.1:8000/api/task-list/';
             
             fetch(url)
@@ -69,6 +70,24 @@
             })
 
         }
+        
+        var form = document.getElementById("form-wrapper");
+        form.addEventListener("submit", function(e){
+            e.preventDefault();
+            var url = 'http://127.0.0.1:8000/api/task-create/';
+            var title = document.getElementById('title').value;
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+
+                },
+                body: JSON.stringify({'title': title})
+            }).then(function(resp){
+                buildList();
+            });
+        });
+
     </script>
 </body>
 </html>
