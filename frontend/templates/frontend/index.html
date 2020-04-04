@@ -59,7 +59,9 @@
         }
         var csrftoken = getCookie('csrftoken');
         //#endregion
-        
+
+        var activeItem = null;
+
         buildList();
 
         // #region Build List
@@ -74,7 +76,7 @@
                     console.log(datas)
 
                     var datas = datas
-                    for (data in datas) {
+                    for (var data in datas) {
                         var item = `
                         <div id="data-row-${data}" class="task-wrapper flex-wrapper">
                             <div style="flex: 7">
@@ -90,8 +92,17 @@
                     `
 
                         wrapper.innerHTML += item;
+
                     }
 
+                    for (var i in datas) {
+                        var editBtn = document.getElementsByClassName('edit')[i];
+                        editBtn.addEventListener('click', (function (item) {
+                            return function () {
+                                editItem(item);
+                            };
+                        })(datas[i]))
+                    }
                 })
 
         }
@@ -102,6 +113,10 @@
         form.addEventListener("submit", function (e) {
             e.preventDefault();
             var url = 'http://127.0.0.1:8000/api/task-create/';
+            if(activeItem != null){
+                url = `http://127.0.0.1:8000/api/task-update/${activeItem.id}`;
+                activeItem = null;
+            }
             var title = document.getElementById('title').value;
             fetch(url, {
                 method: 'POST',
@@ -119,8 +134,14 @@
             });
         });
         //#endregion
-        
-        
+
+        //#region Edit Task
+        function editItem(item) {
+            console.log('Clicked', item);
+            activeItem = item;
+            document.getElementById('title').value = activeItem.title;
+        }
+        //#endregion
     </script>
 </body>
 
