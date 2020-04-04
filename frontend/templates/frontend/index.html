@@ -41,6 +41,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        //#region CSRF Tokenization
         function getCookie(name) {
             var cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -57,9 +58,11 @@
             return cookieValue;
         }
         var csrftoken = getCookie('csrftoken');
-
+        //#endregion
+        
         buildList();
 
+        // #region Build List
         function buildList() {
             var wrapper = document.getElementById('list-wrapper');
             wrapper.innerHTML = '';
@@ -92,7 +95,9 @@
                 })
 
         }
+        //#endregion
 
+        // #region Create Task
         var form = document.getElementById("form-wrapper");
         form.addEventListener("submit", function (e) {
             e.preventDefault();
@@ -113,6 +118,9 @@
                 document.getElementById('form').reset();
             });
         });
+        //#endregion
+        
+        
     </script>
 </body>
 
