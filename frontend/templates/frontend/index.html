@@ -1,35 +1,39 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T o | D u H a s t</title>
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="container">
 
-		<div id="task-container">
-			<div id="form-wrapper">
-				<form id="form">
-					<div class="flex-wrapper">
-						<div style="flex: 6">
-							<input id="title" class="form-control" type="text" name="title" placeholder="Add task" autocomplete="off">
-						</div>
-						<div style="flex: 1">
-							<input id="submit" class="btn" type="submit" >
-						</div>
-					</div>
-				</form>
-			</div>
+        <div id="task-container">
+            <div id="form-wrapper">
+                <form id="form">
+                    <div class="flex-wrapper">
+                        <div style="flex: 6">
+                            <input id="title" class="form-control" type="text" name="title" placeholder="Add task"
+                                autocomplete="off">
+                        </div>
+                        <div style="flex: 1">
+                            <input id="submit" class="btn" type="submit">
+                        </div>
+                    </div>
+                </form>
+            </div>
 
-			<div id="list-wrapper">
-			
-			</div>	
-		</div>
+            <div id="list-wrapper">
+
+            </div>
+        </div>
 
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -37,20 +41,38 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+
         buildList();
-        function buildList(){
+
+        function buildList() {
             var wrapper = document.getElementById('list-wrapper');
             wrapper.innerHTML = '';
             var url = 'http://127.0.0.1:8000/api/task-list/';
-            
-            fetch(url)
-            .then((resp)=>resp.json())
-            .then(function(datas){
-                console.log(datas)
 
-                var datas = datas
-                for(data in datas){
-                    var item = `
+            fetch(url)
+                .then((resp) => resp.json())
+                .then(function (datas) {
+                    console.log(datas)
+
+                    var datas = datas
+                    for (data in datas) {
+                        var item = `
                         <div id="data-row-${data}" class="task-wrapper flex-wrapper">
                             <div style="flex: 7">
                                 <span class="title">${datas[data].title}</span>
@@ -64,15 +86,15 @@
                         </div>
                     `
 
-                    wrapper.innerHTML += item;
-                }
+                        wrapper.innerHTML += item;
+                    }
 
-            })
+                })
 
         }
-        
+
         var form = document.getElementById("form-wrapper");
-        form.addEventListener("submit", function(e){
+        form.addEventListener("submit", function (e) {
             e.preventDefault();
             var url = 'http://127.0.0.1:8000/api/task-create/';
             var title = document.getElementById('title').value;
@@ -80,14 +102,17 @@
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
+                    'X-CSRFToken': csrftoken
 
                 },
-                body: JSON.stringify({'title': title})
-            }).then(function(resp){
+                body: JSON.stringify({
+                    'title': title
+                })
+            }).then(function (resp) {
                 buildList();
             });
         });
-
     </script>
 </body>
+
 </html>
