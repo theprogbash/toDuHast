@@ -77,10 +77,14 @@
 
                     var datas = datas
                     for (var data in datas) {
+                        var title = `<span class="title">${datas[data].title}</span>`;
+                        if(datas[data].completed == true){
+                            title = `<strike class="title">${datas[data].title}</strike>`;
+                        }
                         var item = `
                         <div id="data-row-${data}" class="task-wrapper flex-wrapper">
                             <div style="flex: 7">
-                                <span class="title">${datas[data].title}</span>
+                                ${title}
                             </div>
                             <div style="flex: 1">
                                 <button class="btn btn-sm btn-outline-info edit">Edit</button>
@@ -98,6 +102,7 @@
                     for (var i in datas) {
                         var editBtn = document.getElementsByClassName('edit')[i];
                         var deleteBtn = document.getElementsByClassName('delete')[i];
+                        var taskTitle = document.getElementsByClassName('title')[i];
 
                         editBtn.addEventListener('click', (function (item) {
                             return function () {
@@ -110,9 +115,14 @@
                                 deleteItem(item);
                             };
                         })(datas[i]));
+
+                        taskTitle.addEventListener('click', (function (item) {
+                            return function () {
+                                strikeTask(item);
+                            };
+                        })(datas[i]));
                     }
                 })
-
         }
         //#endregion
 
@@ -160,7 +170,23 @@
                     'Content-type': 'application/json',
                     'X-CSRFToken': csrftoken
                 }
-            }).then((response)=>{
+            }).then((response) => {
+                buildList();
+            });
+        }
+        //#endregion
+
+        //#region Strike Task
+        function strikeTask(item) {
+            item.completed = !item.completed;
+            fetch(`http://127.0.0.1:8000/api/task-update/${item.id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({'title':item.title, 'completed': item.completed})
+            }).then((response) => {
                 buildList();
             });
         }
