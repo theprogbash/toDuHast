@@ -1,0 +1,15 @@
+body{
+    font-family: 'Montserrat', sans-serif;
+    /* background: rgb(54, 217, 182) !important; */
+    background: linear-gradient(90deg, rgb(54, 217, 182) 0%, rgb(32, 152, 126) 43%, rgb(0, 212, 155) 100%);
+}
+
+#task-container{
+    max-width: 600px;
+    margin:100px auto;
+    box-shadow: 0 0 20px black;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
